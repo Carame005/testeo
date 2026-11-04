@@ -12,6 +12,10 @@ var _attacking: bool = false
 
 func _ready() -> void:
 	add_to_group("enemy")
+	# world + player + door_enemy (doors always block enemies)
+	collision_layer = 1 << 2
+	collision_mask = (1 << 0) | (1 << 1) | (1 << 3)
+	_configure_areas()
 	_movement = _find_movement()
 	if _movement and _movement.has_method("setup"):
 		_movement.setup(self)
@@ -92,6 +96,21 @@ func _set_hitboxes_enabled(enabled: bool) -> void:
 			for shape in area.get_children():
 				if shape is CollisionShape2D:
 					shape.disabled = not enabled
+
+
+func _configure_areas() -> void:
+	for child in get_children():
+		if not (child is Area2D):
+			continue
+		var area := child as Area2D
+		if area.name == "Projectile":
+			# world + player
+			area.collision_layer = 0
+			area.collision_mask = (1 << 0) | (1 << 1)
+		else:
+			# Detect player only.
+			area.collision_layer = 0
+			area.collision_mask = 1 << 1
 
 
 func _on_died() -> void:

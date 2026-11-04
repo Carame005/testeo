@@ -16,6 +16,9 @@ var _in_dream: bool = false
 
 func _ready() -> void:
 	add_to_group("player")
+	# world + enemy + door_player (open doors omit this layer)
+	collision_layer = 1 << 1
+	collision_mask = (1 << 0) | (1 << 2) | (1 << 4)
 	if switchable.has_signal("mode_changed"):
 		switchable.mode_changed.connect(_on_mode_changed)
 		_on_mode_changed(switchable.get_mode())

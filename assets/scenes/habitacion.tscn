@@ -2,6 +2,7 @@
 
 [ext_resource type="Texture2D" uid="uid://clsh17dljxm24" path="res://assets/scenary/TilesetField.png" id="1_lf0li"]
 [ext_resource type="Script" uid="uid://bkoec71xnejuk" path="res://assets/scripts/switchable.gd" id="2_switch"]
+[ext_resource type="Script" uid="uid://ctoj8a51fem1a" path="res://assets/scripts/door.gd" id="3_door"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_ilxij"]
 texture = ExtResource("1_lf0li")
@@ -175,6 +176,8 @@ layer_0/tile_data = PackedInt32Array(-1, 65538, 1, -65536, 65538, 1, -65535, 655
 
 [node name="Walls" type="StaticBody2D" parent="." unique_id=353448057]
 position = Vector2(2, 0)
+collision_layer = 1
+collision_mask = 0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Walls" unique_id=1117987866]
 position = Vector2(-210.25, -188)
@@ -210,6 +213,7 @@ shape = SubResource("RectangleShape2D_t3rxn")
 
 [node name="Door" type="StaticBody2D" parent="." unique_id=1668422415]
 position = Vector2(-34, -83)
+script = ExtResource("3_door")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Door" unique_id=1583556502]
 position = Vector2(-6, -100)
@@ -218,6 +222,7 @@ disabled = true
 
 [node name="Door2" type="StaticBody2D" parent="." unique_id=1248391733]
 position = Vector2(-34, -83)
+script = ExtResource("3_door")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Door2" unique_id=1410786911]
 position = Vector2(-6, 216)
@@ -226,6 +231,7 @@ disabled = true
 
 [node name="Door3" type="StaticBody2D" parent="." unique_id=1295057293]
 position = Vector2(-34, -83)
+script = ExtResource("3_door")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Door3" unique_id=1704264406]
 position = Vector2(298, 60)
@@ -233,6 +239,7 @@ shape = SubResource("RectangleShape2D_dsfl7")
 
 [node name="Door4" type="StaticBody2D" parent="." unique_id=943674407]
 position = Vector2(-34, -83)
+script = ExtResource("3_door")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Door4" unique_id=876242575]
 position = Vector2(-311, 60)

@@ -10,6 +10,10 @@ var _active: bool = true
 
 func setup(enemy: CharacterBody2D) -> void:
 	_enemy = enemy
+	# Not on the "enemy" layer the player solid-collides with, so no push.
+	# Still collides with world/doors; Hurtbox detects the player separately.
+	_enemy.collision_layer = 0
+	_enemy.collision_mask = (1 << 0) | (1 << 3)
 	_direction = initial_direction.normalized()
 	if _direction == Vector2.ZERO:
 		_direction = Vector2.RIGHT
