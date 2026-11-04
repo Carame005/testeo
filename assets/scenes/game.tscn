@@ -1,0 +1,42 @@
+[gd_scene format=3 uid="uid://w3e38l2obsqo"]
+
+[ext_resource type="PackedScene" uid="uid://d00igym7pwfe1" path="res://assets/scenes/player.tscn" id="1_cb66b"]
+[ext_resource type="Script" uid="uid://cu44dr7fdx6kc" path="res://assets/scripts/game.gd" id="1_game"]
+[ext_resource type="PackedScene" uid="uid://dbrbdavepsa2p" path="res://assets/scenes/habitacion.tscn" id="2_habitacion"]
+[ext_resource type="PackedScene" uid="uid://cbt3w2furilt1" path="res://assets/scenes/enemy.tscn" id="3_enemy"]
+[ext_resource type="PackedScene" uid="uid://cn6xfss6h7s7b" path="res://assets/scenes/enemy_2.tscn" id="4_enemy2"]
+[ext_resource type="PackedScene" uid="uid://bxk5iodhcl1y1" path="res://assets/scenes/enemy_4.tscn" id="6_3w2km"]
+[ext_resource type="PackedScene" uid="uid://biqe6ous6m14k" path="res://assets/scenes/enemy_3.tscn" id="6_5aext"]
+
+[node name="Game" type="Node2D" unique_id=139143478]
+position = Vector2(-130, -76)
+script = ExtResource("1_game")
+
+[node name="Habitaciones" type="Node2D" parent="." unique_id=1798072966]
+
+[node name="Habitacion" parent="Habitaciones" unique_id=499444695 instance=ExtResource("2_habitacion")]
+position = Vector2(153, 94)
+
+[node name="Habitacion2" parent="Habitaciones" unique_id=836305314 instance=ExtResource("2_habitacion")]
+position = Vector2(-503, 94)
+
+[node name="Enemy" parent="." unique_id=1191328024 instance=ExtResource("3_enemy")]
+position = Vector2(200, 69)
+
+[node name="Enemy2" parent="." unique_id=463419045 instance=ExtResource("4_enemy2")]
+position = Vector2(80, 69)
+
+[node name="Enemy_3" parent="." unique_id=632087891 instance=ExtResource("6_5aext")]
+position = Vector2(135, 23)
+
+[node name="Enemy4" parent="." unique_id=1171050525 instance=ExtResource("6_3w2km")]
+position = Vector2(75, 25)
+
+[node name="Player" parent="." unique_id=268950689 instance=ExtResource("1_cb66b")]
+light_mask = 3
+visibility_layer = 3
+position = Vector2(131, 69)
+
+[node name="Camera2D" type="Camera2D" parent="Player" unique_id=2003611831]
+zoom = Vector2(4, 4)
+limit_smoothed = true
