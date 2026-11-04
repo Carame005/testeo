@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://dbrbdavepsa2p"]
 
 [ext_resource type="Texture2D" uid="uid://clsh17dljxm24" path="res://assets/scenary/TilesetField.png" id="1_lf0li"]
+[ext_resource type="Script" uid="uid://125g5aj0fh7k" path="res://assets/scripts/room.gd" id="1_room"]
 [ext_resource type="Script" uid="uid://bkoec71xnejuk" path="res://assets/scripts/switchable.gd" id="2_switch"]
 [ext_resource type="Script" uid="uid://ctoj8a51fem1a" path="res://assets/scripts/door.gd" id="3_door"]
 
@@ -158,7 +159,8 @@ size = Vector2(48, 16)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_dsfl7"]
 size = Vector2(20, 44)
 
-[node name="Habitacion" type="Node2D" unique_id=499444695]
+[node name="Habitacion2" type="Node2D" unique_id=499444695]
+script = ExtResource("1_room")
 
 [node name="Switchable" type="Node2D" parent="." unique_id=1509705242]
 script = ExtResource("2_switch")
@@ -176,39 +178,38 @@ layer_0/tile_data = PackedInt32Array(-1, 65538, 1, -65536, 65538, 1, -65535, 655
 
 [node name="Walls" type="StaticBody2D" parent="." unique_id=353448057]
 position = Vector2(2, 0)
-collision_layer = 1
 collision_mask = 0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Walls" unique_id=1117987866]
-position = Vector2(-210.25, -188)
+position = Vector2(-210.25, -195)
 shape = SubResource("RectangleShape2D_bhbtl")
 
 [node name="CollisionShape2D5" type="CollisionShape2D" parent="Walls" unique_id=255611978]
-position = Vector2(128.125, -187)
+position = Vector2(128.125, -195)
 shape = SubResource("RectangleShape2D_bhbtl")
 
 [node name="CollisionShape2D2" type="CollisionShape2D" parent="Walls" unique_id=812810111]
-position = Vector2(-210, 135)
+position = Vector2(-210, 146)
 shape = SubResource("RectangleShape2D_bhbtl")
 
 [node name="CollisionShape2D6" type="CollisionShape2D" parent="Walls" unique_id=533833677]
-position = Vector2(129, 136)
+position = Vector2(128, 146)
 shape = SubResource("RectangleShape2D_bhbtl")
 
 [node name="CollisionShape2D3" type="CollisionShape2D" parent="Walls" unique_id=1665003326]
-position = Vector2(-346.5, -120)
+position = Vector2(-358.5, -120)
 shape = SubResource("RectangleShape2D_t3rxn")
 
 [node name="CollisionShape2D7" type="CollisionShape2D" parent="Walls" unique_id=2131938231]
-position = Vector2(-346, 75)
+position = Vector2(-358, 75)
 shape = SubResource("RectangleShape2D_t3rxn")
 
 [node name="CollisionShape2D4" type="CollisionShape2D" parent="Walls" unique_id=1602216501]
-position = Vector2(261, -118)
+position = Vector2(274, -118)
 shape = SubResource("RectangleShape2D_t3rxn")
 
 [node name="CollisionShape2D8" type="CollisionShape2D" parent="Walls" unique_id=2126950785]
-position = Vector2(261, 72)
+position = Vector2(274, 72)
 shape = SubResource("RectangleShape2D_t3rxn")
 
 [node name="Door" type="StaticBody2D" parent="." unique_id=1668422415]
@@ -216,7 +217,7 @@ position = Vector2(-34, -83)
 script = ExtResource("3_door")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Door" unique_id=1583556502]
-position = Vector2(-6, -100)
+position = Vector2(-6, -116)
 shape = SubResource("RectangleShape2D_0qoo8")
 disabled = true
 
@@ -225,7 +226,7 @@ position = Vector2(-34, -83)
 script = ExtResource("3_door")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Door2" unique_id=1410786911]
-position = Vector2(-6, 216)
+position = Vector2(-6, 232)
 shape = SubResource("RectangleShape2D_0qoo8")
 disabled = true
 
@@ -234,14 +235,15 @@ position = Vector2(-34, -83)
 script = ExtResource("3_door")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Door3" unique_id=1704264406]
-position = Vector2(298, 60)
+position = Vector2(314, 60)
 shape = SubResource("RectangleShape2D_dsfl7")
+disabled = true
 
 [node name="Door4" type="StaticBody2D" parent="." unique_id=943674407]
 position = Vector2(-34, -83)
 script = ExtResource("3_door")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Door4" unique_id=876242575]
-position = Vector2(-311, 60)
+position = Vector2(-326, 60)
 shape = SubResource("RectangleShape2D_dsfl7")
 disabled = true

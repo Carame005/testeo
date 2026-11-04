@@ -617,19 +617,19 @@ animations = [{
 "speed": 5.0
 }]
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_bhbtl"]
-radius = 5.0990195
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_gfef2"]
+size = Vector2(9, 10)
 
 [node name="Player" type="CharacterBody2D" unique_id=268950689]
 script = ExtResource("1_8sknh")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=635096296]
 sprite_frames = SubResource("SpriteFrames_bhbtl")
-animation = &"attack_down"
-frame_progress = 0.034243096
+animation = &"walk_down"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1234165900]
-shape = SubResource("CircleShape2D_bhbtl")
+position = Vector2(-0.5, -2)
+shape = SubResource("RectangleShape2D_gfef2")
 
 [node name="Bubble" type="Node2D" parent="." unique_id=1844617268]
 visible = false

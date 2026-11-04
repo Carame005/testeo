@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://dlskv0gn2mn8a"]
 
 [ext_resource type="Script" uid="uid://bkoec71xnejuk" path="res://assets/scripts/switchable.gd" id="1_gf1o8"]
+[ext_resource type="Script" uid="uid://125g5aj0fh7k" path="res://assets/scripts/room.gd" id="1_room"]
 [ext_resource type="Texture2D" uid="uid://clsh17dljxm24" path="res://assets/scenary/TilesetField.png" id="2_vv6ki"]
 [ext_resource type="Script" uid="uid://ctoj8a51fem1a" path="res://assets/scripts/door.gd" id="3_vv6ki"]
 
@@ -150,7 +151,7 @@ sources/0 = SubResource("TileSetAtlasSource_s7cmp")
 size = Vector2(143, 16)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_t3rxn"]
-size = Vector2(12.5, 64)
+size = Vector2(12.5, 78)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_0b2by"]
 size = Vector2(48, 16)
@@ -159,6 +160,7 @@ size = Vector2(48, 16)
 size = Vector2(16, 47)
 
 [node name="HabitacionChica" type="Node2D" unique_id=873851779]
+script = ExtResource("1_room")
 
 [node name="Switchable" type="Node2D" parent="." unique_id=1028693094]
 script = ExtResource("1_gf1o8")
@@ -175,39 +177,35 @@ format = 2
 [node name="Walls" type="StaticBody2D" parent="." unique_id=449367716]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Walls" unique_id=1545415739]
-position = Vector2(-104.5, -87)
+position = Vector2(-104.5, -102)
 shape = SubResource("RectangleShape2D_bhbtl")
 
 [node name="CollisionShape2D2" type="CollisionShape2D" parent="Walls" unique_id=964992679]
-position = Vector2(-104.5, 102)
+position = Vector2(-104.5, 119)
 shape = SubResource("RectangleShape2D_bhbtl")
 
 [node name="CollisionShape2D3" type="CollisionShape2D" parent="Walls" unique_id=1561725493]
-position = Vector2(87.5, 102)
+position = Vector2(87.5, 118)
 shape = SubResource("RectangleShape2D_bhbtl")
 
 [node name="CollisionShape2D4" type="CollisionShape2D" parent="Walls" unique_id=1782512053]
-position = Vector2(87.5, -87)
+position = Vector2(87.5, -103)
 shape = SubResource("RectangleShape2D_bhbtl")
 
 [node name="CollisionShape2D5" type="CollisionShape2D" parent="Walls" unique_id=1308651544]
-position = Vector2(-167.5, -48)
+position = Vector2(-180.5, -54)
 shape = SubResource("RectangleShape2D_t3rxn")
 
 [node name="CollisionShape2D6" type="CollisionShape2D" parent="Walls" unique_id=233859152]
-position = Vector2(-167.5, 64)
-shape = SubResource("RectangleShape2D_t3rxn")
-
-[node name="CollisionShape2D7" type="CollisionShape2D" parent="Walls" unique_id=972361594]
-position = Vector2(150, 64)
+position = Vector2(-181.5, 70)
 shape = SubResource("RectangleShape2D_t3rxn")
 
 [node name="CollisionShape2D8" type="CollisionShape2D" parent="Walls" unique_id=998798254]
-position = Vector2(151.25, 64)
+position = Vector2(165.25, 70)
 shape = SubResource("RectangleShape2D_t3rxn")
 
 [node name="CollisionShape2D9" type="CollisionShape2D" parent="Walls" unique_id=1287819118]
-position = Vector2(151.25, -48)
+position = Vector2(165.25, -55)
 shape = SubResource("RectangleShape2D_t3rxn")
 
 [node name="Door" type="StaticBody2D" parent="." unique_id=879425557]
@@ -215,7 +213,7 @@ position = Vector2(-34, -83)
 script = ExtResource("3_vv6ki")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Door" unique_id=1541843155]
-position = Vector2(27, -5)
+position = Vector2(27, -20)
 shape = SubResource("RectangleShape2D_0b2by")
 disabled = true
 
@@ -224,7 +222,7 @@ position = Vector2(-34, -83)
 script = ExtResource("3_vv6ki")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Door2" unique_id=1988056655]
-position = Vector2(25, 184)
+position = Vector2(25, 201)
 shape = SubResource("RectangleShape2D_0b2by")
 disabled = true
 
@@ -233,7 +231,7 @@ position = Vector2(-34, -83)
 script = ExtResource("3_vv6ki")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Door3" unique_id=1269703727]
-position = Vector2(186, 90.5)
+position = Vector2(200, 90.5)
 shape = SubResource("RectangleShape2D_s7cmp")
 disabled = true
 
@@ -242,6 +240,6 @@ position = Vector2(-34, -83)
 script = ExtResource("3_vv6ki")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Door4" unique_id=985599619]
-position = Vector2(-131, 91)
+position = Vector2(-148, 91)
 shape = SubResource("RectangleShape2D_s7cmp")
 disabled = true

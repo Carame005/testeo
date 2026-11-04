@@ -1,5 +1,6 @@
 [gd_scene format=3 uid="uid://w3e38l2obsqo"]
 
+[ext_resource type="Script" uid="uid://bridb0jxppo7a" path="res://assets/scripts/camera_room_limiter.gd" id="1_cam"]
 [ext_resource type="PackedScene" uid="uid://d00igym7pwfe1" path="res://assets/scenes/player.tscn" id="1_cb66b"]
 [ext_resource type="Script" uid="uid://cu44dr7fdx6kc" path="res://assets/scripts/game.gd" id="1_game"]
 [ext_resource type="PackedScene" uid="uid://dbrbdavepsa2p" path="res://assets/scenes/habitacion.tscn" id="2_habitacion"]
@@ -17,7 +18,16 @@ script = ExtResource("1_game")
 [node name="Habitaciones" type="Node2D" parent="." unique_id=1798072966]
 
 [node name="HabitacionChica" parent="Habitaciones" unique_id=873851779 instance=ExtResource("2_wfsp4")]
-position = Vector2(-366, 62)
+position = Vector2(-381, 63)
+
+[node name="HabitacionChica2" parent="Habitaciones" unique_id=1565707685 instance=ExtResource("2_wfsp4")]
+position = Vector2(122, -232)
+
+[node name="HabitacionChica4" parent="Habitaciones" unique_id=140121719 instance=ExtResource("2_wfsp4")]
+position = Vector2(120, 355)
+
+[node name="HabitacionChica3" parent="Habitaciones" unique_id=776601561 instance=ExtResource("2_wfsp4")]
+position = Vector2(622, 63)
 
 [node name="Habitacion" parent="Habitaciones" unique_id=499444695 instance=ExtResource("2_habitacion")]
 position = Vector2(153, 94)
@@ -30,23 +40,42 @@ position = Vector2(131, 69)
 [node name="Camera2D" type="Camera2D" parent="Player" unique_id=2003611831]
 zoom = Vector2(4, 4)
 limit_smoothed = true
+script = ExtResource("1_cam")
 
 [node name="Enemies" type="Node2D" parent="." unique_id=101058464]
 
 [node name="Hunter" type="Node2D" parent="Enemies" unique_id=2071408482]
 
 [node name="Hunter2" parent="Enemies/Hunter" unique_id=1191328024 instance=ExtResource("3_enemy")]
-position = Vector2(200, 69)
+position = Vector2(157, 345)
+
+[node name="Hunter4" parent="Enemies/Hunter" unique_id=1869751763 instance=ExtResource("3_enemy")]
+position = Vector2(61, 383)
+
+[node name="Hunter3" parent="Enemies/Hunter" unique_id=373008124 instance=ExtResource("3_enemy")]
+position = Vector2(54, 315)
 
 [node name="Ranger" type="Node2D" parent="Enemies" unique_id=1957324827]
 
 [node name="Ranger" parent="Enemies/Ranger" unique_id=463419045 instance=ExtResource("4_enemy2")]
-position = Vector2(80, 69)
+position = Vector2(476, 34)
+
+[node name="Ranger2" parent="Enemies/Ranger" unique_id=1271117657 instance=ExtResource("4_enemy2")]
+position = Vector2(525, 112)
+
+[node name="Ranger3" parent="Enemies/Ranger" unique_id=774480723 instance=ExtResource("4_enemy2")]
+position = Vector2(660, 35)
 
 [node name="Roamer" type="Node2D" parent="Enemies" unique_id=485620123]
 
 [node name="Roamer" parent="Enemies/Roamer" unique_id=632087891 instance=ExtResource("6_5aext")]
-position = Vector2(135, 23)
+position = Vector2(29, -160)
+
+[node name="Roamer3" parent="Enemies/Roamer" unique_id=859703860 instance=ExtResource("6_5aext")]
+position = Vector2(90, -230)
+
+[node name="Roamer2" parent="Enemies/Roamer" unique_id=128083600 instance=ExtResource("6_5aext")]
+position = Vector2(175, -162)
 
 [node name="Bouncer" type="Node2D" parent="Enemies" unique_id=1901690949]
 

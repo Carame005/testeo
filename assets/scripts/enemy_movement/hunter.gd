@@ -11,6 +11,9 @@ var _active: bool = true
 
 func setup(enemy: CharacterBody2D) -> void:
 	_enemy = enemy
+	# Solid vs walls/doors/other hunters; no solid push vs player (hurtbox handles contact).
+	_enemy.collision_layer = 1 << 2 # enemy
+	_enemy.collision_mask = (1 << 0) | (1 << 2) | (1 << 3) # world + enemy + door_enemy
 
 
 func set_active(active: bool) -> void:

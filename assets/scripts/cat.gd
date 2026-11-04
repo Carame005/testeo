@@ -74,9 +74,60 @@ func get_player() -> Node2D:
 
 
 func _on_mode_changed(index: int) -> void:
-	_active = index == 0
+	var was_active := _active
+	_active = index == 0 and not _is_caught
 	if _movement and _movement.has_method("set_active"):
 		_movement.set_active(_active)
+
 	if not _active:
 		velocity = Vector2.ZERO
 		animated_sprite.stop()
+		visible = false
+		return
+
+	# Reappears in Pesadilla at a random spot in the current room.
+	if not was_active:
+		_teleport_random_in_room()
+	visible = true
+
+
+func _teleport_random_in_room() -> void:
+	var room := _find_room_at(global_position)
+	if room == null:
+		var player := get_player()
+		if player != null:
+			room = _find_room_at(player.global_position)
+	if room == null or not room.has_method("get_camera_bounds"):
+		return
+
+	var bounds: Rect2 = room.get_camera_bounds()
+	if bounds.size == Vector2.ZERO:
+		return
+
+	# Keep away from outer walls / camera edge.
+	var margin := 24.0
+	var inner := bounds.grow(-margin)
+	if inner.size.x <= 1.0 or inner.size.y <= 1.0:
+		inner = bounds
+
+	global_position = Vector2(
+		randf_range(inner.position.x, inner.end.x),
+		randf_range(inner.position.y, inner.end.y)
+	)
+	velocity = Vector2.ZERO
+
+
+func _find_room_at(point: Vector2) -> Node2D:
+	var best: Node2D = null
+	var best_area := INF
+	for node in get_tree().get_nodes_in_group("rooms"):
+		if not node.has_method("contains_world_point"):
+			continue
+		if not node.contains_world_point(point, 8.0):
+			continue
+		var bounds: Rect2 = node.get_camera_bounds()
+		var area: float = bounds.get_area()
+		if area < best_area:
+			best_area = area
+			best = node
+	return best
