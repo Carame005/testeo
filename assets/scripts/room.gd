@@ -1,10 +1,140 @@
+class_name Room
 extends Node2D
 
-## Marks a room and exposes its camera bounds from the Pesadilla tilemap.
+## Base room: camera bounds, activation, doors, and enemy spawns.
+
+signal player_entered(player: Node2D)
+signal player_exited(player: Node2D)
+
+## Optional: drag Door StaticBodies here. If empty, auto-detects Door children.
+@export var doors: Array[Door] = []
+## Snap the player past the doorway when this room becomes active.
+@export var teleport_on_enter: bool = true
+## How far inside (from the entry door toward the room center) to place the player.
+@export var enter_teleport_inset: float = 40.0
+## Grace time after enter before sealing doors (player is already teleported inside).
+@export var door_close_delay: float = 0.15
+
+var _active: bool = false
+var _spawned_enemies: Array[Node] = []
+var _door_close_token: int = 0
 
 
 func _ready() -> void:
 	add_to_group("rooms")
+	_active = false
+	# Inactive rooms pause scripts/enemies, but walls/doors must keep colliding
+	# (default DISABLE_MODE_REMOVE would let the player walk out of the map).
+	_keep_world_collision_when_disabled()
+	process_mode = Node.PROCESS_MODE_DISABLED
+
+
+func is_active() -> bool:
+	return _active
+
+
+func set_active(active: bool, player: Node2D = null) -> void:
+	if _active == active:
+		return
+	_active = active
+	if _active:
+		process_mode = Node.PROCESS_MODE_INHERIT
+		if player != null:
+			teleport_player_inside_from_entry(player)
+		_enable_spawned_enemies()
+		on_player_entered(player)
+		player_entered.emit(player)
+	else:
+		on_player_exited(player)
+		player_exited.emit(player)
+		_disable_spawned_enemies()
+		process_mode = Node.PROCESS_MODE_DISABLED
+
+
+## Places the player just inside the nearest doorway so they never stand in the seal zone.
+func teleport_player_inside_from_entry(player: Node2D) -> void:
+	if not teleport_on_enter or player == null:
+		return
+	var bounds := get_camera_bounds()
+	if bounds.size == Vector2.ZERO:
+		return
+	# Already deep inside (e.g. run start) — don't yank.
+	var deep := bounds.grow(-enter_teleport_inset)
+	if deep.size.x > 0.0 and deep.size.y > 0.0 and deep.has_point(player.global_position):
+		return
+
+	var target := get_entry_teleport_position(player.global_position)
+	if player is CharacterBody2D:
+		var body := player as CharacterBody2D
+		body.velocity = Vector2.ZERO
+		body.global_position = target
+	else:
+		player.global_position = target
+
+
+func get_entry_teleport_position(from_world: Vector2) -> Vector2:
+	var bounds := get_camera_bounds()
+	var center := bounds.get_center()
+	var origin := from_world
+	var door := _nearest_door_to(from_world)
+	if door != null:
+		origin = _door_world_center(door)
+
+	var inward := center - origin
+	if inward.length_squared() < 0.01:
+		inward = center - from_world
+	if inward.length_squared() < 0.01:
+		return center
+	inward = inward.normalized()
+
+	var target := origin + inward * enter_teleport_inset
+	var safe := bounds.grow(-maxf(enter_teleport_inset * 0.5, 16.0))
+	if safe.size.x > 0.0 and safe.size.y > 0.0:
+		target.x = clampf(target.x, safe.position.x, safe.end.x)
+		target.y = clampf(target.y, safe.position.y, safe.end.y)
+	return target
+
+
+func _nearest_door_to(point: Vector2) -> Door:
+	var best: Door = null
+	var best_dist := INF
+	for door in get_doors():
+		var dist := _door_world_center(door).distance_squared_to(point)
+		if dist < best_dist:
+			best_dist = dist
+			best = door
+	return best
+
+
+func _door_world_center(door: Door) -> Vector2:
+	var rect := _collision_global_rect(door)
+	if rect.size != Vector2.ZERO:
+		return rect.get_center()
+	return door.global_position
+
+
+func _keep_world_collision_when_disabled() -> void:
+	_keep_world_collision_recursive(self)
+
+
+func _keep_world_collision_recursive(node: Node) -> void:
+	if node.name == "Enemies":
+		return
+	if node is StaticBody2D:
+		(node as CollisionObject2D).disable_mode = CollisionObject2D.DISABLE_MODE_KEEP_ACTIVE
+	for child in node.get_children():
+		_keep_world_collision_recursive(child)
+
+
+func on_player_entered(_player: Node2D) -> void:
+	# Base rooms with EnemySpawnPoint children spawn on enter.
+	# Typed rooms (Safe, Parkour, …) override and skip this if needed.
+	if not get_spawn_points().is_empty():
+		spawn_enemies()
+
+
+func on_player_exited(_player: Node2D) -> void:
+	pass
 
 
 func get_camera_bounds() -> Rect2:
@@ -31,3 +161,122 @@ func contains_world_point(point: Vector2, margin: float = 8.0) -> bool:
 	if bounds.size == Vector2.ZERO:
 		return false
 	return bounds.grow(margin).has_point(point)
+
+
+func get_doors() -> Array[Door]:
+	if not doors.is_empty():
+		var assigned: Array[Door] = []
+		for door in doors:
+			if door != null:
+				assigned.append(door)
+		return assigned
+
+	var found: Array[Door] = []
+	for child in get_children():
+		if child is Door:
+			found.append(child as Door)
+	return found
+
+
+func get_spawn_points() -> Array[EnemySpawnPoint]:
+	var points: Array[EnemySpawnPoint] = []
+	_collect_spawn_points(self, points)
+	return points
+
+
+func spawn_enemies() -> Array[Node]:
+	var container := _get_or_create_enemies_container()
+	_prune_spawned_enemies()
+	for point in get_spawn_points():
+		var enemy := point.spawn(container)
+		if enemy != null and not _spawned_enemies.has(enemy):
+			_spawned_enemies.append(enemy)
+			if enemy.has_signal("tree_exiting"):
+				enemy.tree_exiting.connect(_on_spawned_enemy_exiting.bind(enemy), CONNECT_ONE_SHOT)
+	_enable_spawned_enemies()
+	return _spawned_enemies.duplicate()
+
+
+func get_alive_enemies() -> Array[Node]:
+	_prune_spawned_enemies()
+	return _spawned_enemies.duplicate()
+
+
+func has_alive_enemies() -> bool:
+	return not get_alive_enemies().is_empty()
+
+
+func set_all_doors_open(open: bool) -> void:
+	for door in get_doors():
+		door.set_open(open)
+
+
+## Closes doors after `door_close_delay`. Cancelled if the player leaves first.
+## Safe to call after enter teleport — the player is already clear of the doorway.
+func close_doors_after_delay() -> void:
+	_door_close_token += 1
+	var token := _door_close_token
+	if door_close_delay > 0.0:
+		await get_tree().create_timer(door_close_delay).timeout
+	if token != _door_close_token or not is_active():
+		return
+	set_all_doors_open(false)
+
+
+func cancel_pending_door_close() -> void:
+	_door_close_token += 1
+
+
+func _collision_global_rect(node: Node) -> Rect2:
+	var shape_node := node.get_node_or_null("CollisionShape2D") as CollisionShape2D
+	if shape_node == null or shape_node.shape == null:
+		return Rect2()
+	var shape := shape_node.shape
+	if shape is RectangleShape2D:
+		var size: Vector2 = (shape as RectangleShape2D).size * shape_node.global_scale.abs()
+		return Rect2(shape_node.global_position - size * 0.5, size)
+	if shape is CircleShape2D:
+		var radius: float = (shape as CircleShape2D).radius * maxf(absf(shape_node.global_scale.x), absf(shape_node.global_scale.y))
+		var extent := Vector2(radius, radius)
+		return Rect2(shape_node.global_position - extent, extent * 2.0)
+	return Rect2(shape_node.global_position - Vector2(8, 8), Vector2(16, 16))
+
+
+func _get_or_create_enemies_container() -> Node:
+	var existing := get_node_or_null("Enemies")
+	if existing != null:
+		return existing
+	var container := Node2D.new()
+	container.name = "Enemies"
+	add_child(container)
+	return container
+
+
+func _collect_spawn_points(node: Node, out: Array[EnemySpawnPoint]) -> void:
+	if node is EnemySpawnPoint:
+		out.append(node)
+	for child in node.get_children():
+		# Skip live enemy instances under Enemies.
+		if child.name == "Enemies":
+			continue
+		_collect_spawn_points(child, out)
+
+
+func _enable_spawned_enemies() -> void:
+	_prune_spawned_enemies()
+	for enemy in _spawned_enemies:
+		enemy.process_mode = Node.PROCESS_MODE_INHERIT
+
+
+func _disable_spawned_enemies() -> void:
+	_prune_spawned_enemies()
+	for enemy in _spawned_enemies:
+		enemy.process_mode = Node.PROCESS_MODE_DISABLED
+
+
+func _prune_spawned_enemies() -> void:
+	_spawned_enemies = _spawned_enemies.filter(func(e: Node) -> bool: return is_instance_valid(e))
+
+
+func _on_spawned_enemy_exiting(enemy: Node) -> void:
+	_spawned_enemies.erase(enemy)

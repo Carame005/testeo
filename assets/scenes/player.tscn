@@ -2,11 +2,21 @@
 
 [ext_resource type="Script" uid="uid://dq6a2d17nrtuf" path="res://assets/scripts/player.gd" id="1_8sknh"]
 [ext_resource type="Script" uid="uid://bkoec71xnejuk" path="res://assets/scripts/switchable.gd" id="1_switch"]
+[ext_resource type="Script" uid="uid://bgh2aslom8hdu" path="res://assets/scripts/damageable.gd" id="1_damage"]
+[ext_resource type="Script" path="res://assets/scripts/player_attack.gd" id="1_attack"]
+[ext_resource type="Script" path="res://assets/scripts/charge_bar.gd" id="1_charge"]
 [ext_resource type="Texture2D" uid="uid://4p2ve3lcamx" path="res://assets/sprites/player/attack.png" id="2_0gfpk"]
 [ext_resource type="Texture2D" uid="uid://d2g0enlcnqfvt" path="res://assets/sprites/player/charging.png" id="3_0hrit"]
 [ext_resource type="Texture2D" uid="uid://bni85e3thfps" path="res://assets/sprites/player/hurt.png" id="4_o5c66"]
 [ext_resource type="Texture2D" uid="uid://caxg5i8lcu56r" path="res://assets/sprites/player/walking.png" id="5_tc801"]
 [ext_resource type="Texture2D" uid="uid://cb0awegdaoq6u" path="res://assets/sprites/player/bubble.png" id="6_0gfpk"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/attacks/swipe.png" id="7_swipe"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/attacks/piercing.png" id="8_pierce"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/attacks/Projectile.png" id="9_proj"]
+[ext_resource type="Texture2D" path="res://assets/sprites/HUD/emptyCharge.png" id="10_empty"]
+[ext_resource type="Texture2D" path="res://assets/sprites/HUD/greenCharge.png" id="11_green"]
+[ext_resource type="Texture2D" path="res://assets/sprites/HUD/fullcharge.png" id="12_full"]
+[ext_resource type="Texture2D" path="res://assets/sprites/HUD/halfCharge.png" id="13_half"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_60g6h"]
 atlas = ExtResource("2_0gfpk")
@@ -539,7 +549,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_epkru")
 }],
-"loop": 1,
+"loop": false,
 "name": &"hurt_down",
 "speed": 5.0
 }, {
@@ -550,7 +560,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_6v0mo")
 }],
-"loop": 1,
+"loop": false,
 "name": &"hurt_sides",
 "speed": 5.0
 }, {
@@ -561,7 +571,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_lnxtd")
 }],
-"loop": 1,
+"loop": false,
 "name": &"hurt_up",
 "speed": 5.0
 }, {
@@ -640,3 +650,35 @@ texture = ExtResource("6_0gfpk")
 
 [node name="Switchable" type="Node2D" parent="." unique_id=1509705244]
 script = ExtResource("1_switch")
+
+[node name="Damageable" type="Node2D" parent="."]
+script = ExtResource("1_damage")
+max_health = 3
+invulnerability_time = 0.6
+immortal = true
+
+[node name="Attack" type="Node2D" parent="."]
+script = ExtResource("1_attack")
+slash_texture = ExtResource("7_swipe")
+thrust_texture = ExtResource("8_pierce")
+projectile_texture = ExtResource("9_proj")
+
+[node name="ChargeBar" type="Node2D" parent="."]
+script = ExtResource("1_charge")
+empty_texture = ExtResource("10_empty")
+green_texture = ExtResource("11_green")
+half_texture = ExtResource("13_half")
+full_texture = ExtResource("12_full")
+
+[node name="Empty" type="Sprite2D" parent="ChargeBar"]
+texture = ExtResource("10_empty")
+
+[node name="Half" type="Sprite2D" parent="ChargeBar"]
+visible = false
+texture = ExtResource("13_half")
+
+[node name="Green" type="Sprite2D" parent="ChargeBar"]
+texture = ExtResource("11_green")
+
+[node name="Full" type="Sprite2D" parent="ChargeBar"]
+texture = ExtResource("12_full")

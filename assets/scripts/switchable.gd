@@ -10,6 +10,7 @@ const MODE_SUENO := 1
 @export var mode_count: int = 2
 
 var _index: int = 0
+var _locked: bool = false
 
 
 func _ready() -> void:
@@ -25,12 +26,35 @@ func _ready() -> void:
 
 
 func toggle() -> void:
+	if _locked:
+		return
 	var count := maxi(mode_count, variants.size())
 	if count < 2:
 		return
 	_index = (_index + 1) % count
 	_apply()
 	mode_changed.emit(_index)
+
+
+func set_mode(index: int) -> void:
+	var count := maxi(mode_count, variants.size())
+	if count <= 0:
+		return
+	var next := clampi(index, 0, count - 1)
+	if next == _index:
+		_apply()
+		return
+	_index = next
+	_apply()
+	mode_changed.emit(_index)
+
+
+func set_locked(locked: bool) -> void:
+	_locked = locked
+
+
+func is_locked() -> bool:
+	return _locked
 
 
 func get_mode() -> int:

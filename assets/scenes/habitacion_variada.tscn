@@ -1,9 +1,11 @@
 [gd_scene format=3 uid="uid://dlskv0gn2mn8a"]
 
 [ext_resource type="Script" uid="uid://bkoec71xnejuk" path="res://assets/scripts/switchable.gd" id="1_gf1o8"]
-[ext_resource type="Script" uid="uid://125g5aj0fh7k" path="res://assets/scripts/room.gd" id="1_room"]
+[ext_resource type="Script" uid="uid://bqy2qbyin3xr0" path="res://assets/scripts/rooms/varied.gd" id="1_room"]
 [ext_resource type="Texture2D" uid="uid://clsh17dljxm24" path="res://assets/scenary/TilesetField.png" id="2_vv6ki"]
 [ext_resource type="Script" uid="uid://ctoj8a51fem1a" path="res://assets/scripts/door.gd" id="3_vv6ki"]
+[ext_resource type="Script" uid="uid://cgr461snah57y" path="res://assets/scripts/rooms/enemy_spawn_point.gd" id="6_cjr5n"]
+[ext_resource type="PackedScene" uid="uid://cn6xfss6h7s7b" path="res://assets/scenes/enemy_2.tscn" id="7_iunbl"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_0b2by"]
 texture = ExtResource("2_vv6ki")
@@ -159,8 +161,9 @@ size = Vector2(48, 16)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_s7cmp"]
 size = Vector2(16, 47)
 
-[node name="HabitacionChica" type="Node2D" unique_id=873851779]
+[node name="HabitacionChica" type="Node2D" unique_id=873851779 node_paths=PackedStringArray("doors")]
 script = ExtResource("1_room")
+doors = [NodePath("Door"), NodePath("Door2"), NodePath("Door3"), NodePath("Door4")]
 
 [node name="Switchable" type="Node2D" parent="." unique_id=1028693094]
 script = ExtResource("1_gf1o8")
@@ -243,3 +246,18 @@ script = ExtResource("3_vv6ki")
 position = Vector2(-148, 91)
 shape = SubResource("RectangleShape2D_s7cmp")
 disabled = true
+
+[node name="EnemySpawnpoint" type="Marker2D" parent="." unique_id=1869950011]
+position = Vector2(-105, 49)
+script = ExtResource("6_cjr5n")
+enemy_scene = ExtResource("7_iunbl")
+
+[node name="EnemySpawnpoint2" type="Marker2D" parent="." unique_id=136418372]
+position = Vector2(58, 61)
+script = ExtResource("6_cjr5n")
+enemy_scene = ExtResource("7_iunbl")
+
+[node name="EnemySpawnpoint3" type="Marker2D" parent="." unique_id=898948369]
+position = Vector2(-6, -41)
+script = ExtResource("6_cjr5n")
+enemy_scene = ExtResource("7_iunbl")

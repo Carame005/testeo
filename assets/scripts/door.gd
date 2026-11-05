@@ -1,3 +1,4 @@
+class_name Door
 extends StaticBody2D
 
 ## Layer bits (1-based Godot layers):
@@ -13,6 +14,8 @@ var _open: bool = false
 func _ready() -> void:
 	add_to_group("door")
 	collision_mask = 0
+	# Stay solid even if the parent room pauses with PROCESS_MODE_DISABLED.
+	disable_mode = CollisionObject2D.DISABLE_MODE_KEEP_ACTIVE
 
 	var shape := get_node_or_null("CollisionShape2D") as CollisionShape2D
 	if shape != null and shape.disabled:

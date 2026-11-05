@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://dbrbdavepsa2p"]
 
 [ext_resource type="Texture2D" uid="uid://clsh17dljxm24" path="res://assets/scenary/TilesetField.png" id="1_lf0li"]
-[ext_resource type="Script" uid="uid://125g5aj0fh7k" path="res://assets/scripts/room.gd" id="1_room"]
+[ext_resource type="Script" uid="uid://c0f7stfppu3ag" path="res://assets/scripts/rooms/starting.gd" id="1_room"]
 [ext_resource type="Script" uid="uid://bkoec71xnejuk" path="res://assets/scripts/switchable.gd" id="2_switch"]
 [ext_resource type="Script" uid="uid://ctoj8a51fem1a" path="res://assets/scripts/door.gd" id="3_door"]
 
@@ -154,13 +154,21 @@ size = Vector2(288.25, 8)
 size = Vector2(10, 148.5)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_0qoo8"]
-size = Vector2(48, 16)
+size = Vector2(48, 14)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_dsfl7"]
 size = Vector2(20, 44)
 
-[node name="Habitacion2" type="Node2D" unique_id=499444695]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_2p1tb"]
+size = Vector2(48, 51)
+
+[node name="Habitacion2" type="Node2D" unique_id=499444695 node_paths=PackedStringArray("door_north", "door_east", "door_south", "door_west", "boss_door_area")]
 script = ExtResource("1_room")
+door_north = NodePath("Door")
+door_east = NodePath("Door3")
+door_south = NodePath("Door2")
+door_west = NodePath("Door4")
+boss_door_area = NodePath("BossArea")
 
 [node name="Switchable" type="Node2D" parent="." unique_id=1509705242]
 script = ExtResource("2_switch")
@@ -212,38 +220,47 @@ shape = SubResource("RectangleShape2D_t3rxn")
 position = Vector2(274, 72)
 shape = SubResource("RectangleShape2D_t3rxn")
 
-[node name="Door" type="StaticBody2D" parent="." unique_id=1668422415]
-position = Vector2(-34, -83)
+[node name="Door" type="StaticBody2D" parent="." unique_id=96976549]
+position = Vector2(-37, -183)
 script = ExtResource("3_door")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Door" unique_id=1583556502]
-position = Vector2(-6, -116)
+position = Vector2(-6, -13)
 shape = SubResource("RectangleShape2D_0qoo8")
 disabled = true
 
-[node name="Door2" type="StaticBody2D" parent="." unique_id=1248391733]
-position = Vector2(-34, -83)
+[node name="Door2" type="StaticBody2D" parent="." unique_id=401503294]
+position = Vector2(-43, 153)
 script = ExtResource("3_door")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Door2" unique_id=1410786911]
-position = Vector2(-6, 232)
+position = Vector2(5, -3)
 shape = SubResource("RectangleShape2D_0qoo8")
 disabled = true
 
-[node name="Door3" type="StaticBody2D" parent="." unique_id=1295057293]
-position = Vector2(-34, -83)
+[node name="Door3" type="StaticBody2D" parent="." unique_id=501494015]
+position = Vector2(275, -28)
 script = ExtResource("3_door")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Door3" unique_id=1704264406]
-position = Vector2(314, 60)
+position = Vector2(5, 4)
 shape = SubResource("RectangleShape2D_dsfl7")
 disabled = true
 
-[node name="Door4" type="StaticBody2D" parent="." unique_id=943674407]
-position = Vector2(-34, -83)
+[node name="Door4" type="StaticBody2D" parent="." unique_id=1535132777]
+position = Vector2(-356, -24)
 script = ExtResource("3_door")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Door4" unique_id=876242575]
-position = Vector2(-326, 60)
+position = Vector2(-4, 1)
 shape = SubResource("RectangleShape2D_dsfl7")
 disabled = true
+
+[node name="BossArea" type="Area2D" parent="." unique_id=213511992]
+position = Vector2(-41, 151)
+collision_layer = 0
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="BossArea" unique_id=1693784062]
+position = Vector2(3, -15.5)
+shape = SubResource("RectangleShape2D_2p1tb")

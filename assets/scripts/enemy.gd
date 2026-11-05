@@ -64,8 +64,18 @@ func get_player() -> Node2D:
 	return get_tree().get_first_node_in_group("player") as Node2D
 
 
+## Optional elite/shielded hit hook. Falls back to flat damage.
+func try_receive_hit(amount: int, hit_origin: Vector2) -> bool:
+	if _movement != null and _movement.has_method("try_receive_hit"):
+		return bool(_movement.call("try_receive_hit", amount, hit_origin))
+	if damageable != null and damageable.has_method("take_damage"):
+		damageable.take_damage(amount)
+		return true
+	return false
+
+
 func _find_movement() -> Node:
-	for child_name in ["Hunter", "Ranger", "Roamer", "Bouncer", "Runner"]:
+	for child_name in ["Hunter", "Ranger", "Roamer", "Bouncer", "Runner", "Elite"]:
 		var node := get_node_or_null(child_name)
 		if node != null and node.get_script() != null:
 			return node
@@ -80,11 +90,12 @@ func _on_mode_changed(index: int) -> void:
 	if not _active:
 		velocity = Vector2.ZERO
 		_attacking = false
-		animated_sprite.play("inactive")
+		if animated_sprite.sprite_frames != null and animated_sprite.sprite_frames.has_animation("inactive"):
+			animated_sprite.play("inactive")
 
 
 func _set_hitboxes_enabled(enabled: bool) -> void:
-	var body_shape := get_node_or_null("CollisionShape2D") as CollisionShape2D
+	var body_shape := _find_body_shape()
 	if body_shape != null:
 		body_shape.disabled = not enabled
 
@@ -98,19 +109,30 @@ func _set_hitboxes_enabled(enabled: bool) -> void:
 					shape.disabled = not enabled
 
 
+func _find_body_shape() -> CollisionShape2D:
+	var named := get_node_or_null("CollisionShape2D") as CollisionShape2D
+	if named != null:
+		return named
+	return get_node_or_null("Hitbox") as CollisionShape2D
+
+
 func _configure_areas() -> void:
-	for child in get_children():
-		if not (child is Area2D):
-			continue
-		var area := child as Area2D
-		if area.name == "Projectile":
-			# world + player
-			area.collision_layer = 0
-			area.collision_mask = (1 << 0) | (1 << 1)
-		else:
-			# Detect player only.
-			area.collision_layer = 0
-			area.collision_mask = 1 << 1
+	_configure_area_tree(self)
+
+
+func _configure_area_tree(node: Node) -> void:
+	for child in node.get_children():
+		if child is Area2D:
+			var area := child as Area2D
+			if area.name == "Projectile":
+				area.collision_layer = 0
+				area.collision_mask = (1 << 0) | (1 << 1)
+			else:
+				area.collision_layer = 0
+				area.collision_mask = 1 << 1
+				if area.name.to_lower().contains("hurt") or area.name.to_lower().contains("shield"):
+					area.add_to_group("hurtbox")
+		_configure_area_tree(child)
 
 
 func _on_died() -> void:

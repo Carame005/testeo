@@ -20,11 +20,17 @@ func _refresh_room() -> void:
 		return
 
 	var room := _find_room_at(player.global_position)
-	if room == null or room == _current_room:
+	if room == _current_room:
 		return
 
+	var previous := _current_room
 	_current_room = room
-	_apply_bounds(room)
+
+	if previous != null and previous.has_method("set_active"):
+		previous.set_active(false, player)
+	if room != null and room.has_method("set_active"):
+		room.set_active(true, player)
+		_apply_bounds(room)
 
 
 func _find_room_at(point: Vector2) -> Node2D:
