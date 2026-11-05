@@ -43,6 +43,9 @@ position = Vector2(153, 95)
 [node name="Habitaciontest2" parent="Habitaciones" unique_id=1510706846 instance=ExtResource("2_s2rys")]
 position = Vector2(485, -240)
 
+[node name="Habitaciontest4" parent="Habitaciones" unique_id=679016626 instance=ExtResource("2_s2rys")]
+position = Vector2(487, -473)
+
 [node name="Habitaciontest3" parent="Habitaciones" unique_id=1901903452 instance=ExtResource("2_s2rys")]
 position = Vector2(121, -478)
 
@@ -60,7 +63,7 @@ script = ExtResource("1_cam")
 [node name="Runner" type="Node2D" parent="." unique_id=973671502]
 
 [node name="Cat" parent="Runner" unique_id=1834370449 instance=ExtResource("9_pw37s")]
-position = Vector2(-62, 14)
+position = Vector2(471, -439)
 
 [node name="Enemy" type="Node2D" parent="." unique_id=1847284187]
 
