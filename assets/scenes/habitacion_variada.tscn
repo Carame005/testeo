@@ -161,7 +161,7 @@ size = Vector2(48, 16)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_s7cmp"]
 size = Vector2(16, 47)
 
-[node name="HabitacionChica" type="Node2D" unique_id=873851779 node_paths=PackedStringArray("doors")]
+[node name="HabitacionVariada" type="Node2D" unique_id=873851779 node_paths=PackedStringArray("doors")]
 script = ExtResource("1_room")
 doors = [NodePath("Door"), NodePath("Door2"), NodePath("Door3"), NodePath("Door4")]
 

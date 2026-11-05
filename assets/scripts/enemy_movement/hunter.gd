@@ -43,7 +43,8 @@ func physics_update(delta: float) -> void:
 		_enemy.call("play_directional_animation", "attacking", direction)
 		if _cooldown_left <= 0.0:
 			_cooldown_left = attack_cooldown
-			# Player damage is intentionally deferred.
+			if _enemy.has_method("deal_player_hit"):
+				_enemy.call("deal_player_hit", player)
 	else:
 		_enemy.call("set_attacking", false)
 		_enemy.velocity = direction * speed

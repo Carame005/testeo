@@ -4,11 +4,16 @@
 [ext_resource type="PackedScene" uid="uid://d00igym7pwfe1" path="res://assets/scenes/player.tscn" id="1_cb66b"]
 [ext_resource type="Script" uid="uid://cu44dr7fdx6kc" path="res://assets/scripts/game.gd" id="1_game"]
 [ext_resource type="PackedScene" uid="uid://dbrbdavepsa2p" path="res://assets/scenes/habitacion.tscn" id="2_habitacion"]
+[ext_resource type="PackedScene" uid="uid://bd24eu5qqqv2d" path="res://assets/scenes/habitacion_enemy_test.tscn" id="2_s2rys"]
 [ext_resource type="PackedScene" uid="uid://dlskv0gn2mn8a" path="res://assets/scenes/habitacion_variada.tscn" id="2_wfsp4"]
 [ext_resource type="Script" uid="uid://125g5aj0fh7k" path="res://assets/scripts/room.gd" id="3_wfsp4"]
 [ext_resource type="PackedScene" uid="uid://d0bcr6ctny2xs" path="res://assets/scenes/elite.tscn" id="8_pw37s"]
 [ext_resource type="PackedScene" uid="uid://dtajvumsbmxxj" path="res://assets/scenes/habitacion_trampa.tscn" id="9_k2t1h"]
 [ext_resource type="PackedScene" uid="uid://bv4cgmj36fw4k" path="res://assets/scenes/cat.tscn" id="9_pw37s"]
+[ext_resource type="PackedScene" uid="uid://cskjfyum7ia8f" path="res://assets/scenes/habitacion_parkour.tscn" id="10_k2t1h"]
+[ext_resource type="PackedScene" uid="uid://bka021qp1cnmm" path="res://assets/scenes/habitacion_descanso.tscn" id="11_phsto"]
+[ext_resource type="PackedScene" uid="uid://bxk5iodhcl1y1" path="res://assets/scenes/enemy_4.tscn" id="13_fc420"]
+[ext_resource type="PackedScene" uid="uid://biqe6ous6m14k" path="res://assets/scenes/enemy_3.tscn" id="14_kc0sw"]
 
 [node name="Game" type="Node2D" unique_id=139143478]
 position = Vector2(-130, -76)
@@ -16,29 +21,36 @@ script = ExtResource("1_game")
 
 [node name="Habitaciones" type="Node2D" parent="." unique_id=1798072966]
 
+[node name="Habitaciontest" parent="Habitaciones" unique_id=873851779 instance=ExtResource("2_s2rys")]
+position = Vector2(-245, -240)
+
+[node name="HabitacionParkour" parent="Habitaciones" unique_id=1762489026 instance=ExtResource("10_k2t1h")]
+position = Vector2(-391, 64)
+
+[node name="HabitacionDescanso" parent="Habitaciones" unique_id=151333784 instance=ExtResource("11_phsto")]
+position = Vector2(121, -239)
+
 [node name="HabitacionTrampa" parent="Habitaciones" unique_id=249061851 instance=ExtResource("9_k2t1h")]
 position = Vector2(634, 65)
 
-[node name="HabitacionChica" parent="Habitaciones" unique_id=873851779 instance=ExtResource("2_wfsp4")]
-position = Vector2(-381, 63)
-script = ExtResource("3_wfsp4")
-
-[node name="HabitacionChica2" parent="Habitaciones" unique_id=1565707685 instance=ExtResource("2_wfsp4")]
-position = Vector2(122, -232)
-script = ExtResource("3_wfsp4")
-
-[node name="HabitacionChica4" parent="Habitaciones" unique_id=140121719 instance=ExtResource("2_wfsp4")]
+[node name="HabitacionVariada" parent="Habitaciones" unique_id=140121719 instance=ExtResource("2_wfsp4")]
 position = Vector2(120, 355)
 script = ExtResource("3_wfsp4")
 
-[node name="Habitacion" parent="Habitaciones" unique_id=499444695 instance=ExtResource("2_habitacion")]
+[node name="HabitacionMain" parent="Habitaciones" unique_id=499444695 instance=ExtResource("2_habitacion")]
 position = Vector2(153, 95)
 script = ExtResource("3_wfsp4")
 
+[node name="Habitaciontest2" parent="Habitaciones" unique_id=1510706846 instance=ExtResource("2_s2rys")]
+position = Vector2(485, -240)
+
+[node name="Habitaciontest3" parent="Habitaciones" unique_id=1901903452 instance=ExtResource("2_s2rys")]
+position = Vector2(121, -478)
+
 [node name="Player" parent="." unique_id=268950689 instance=ExtResource("1_cb66b")]
-z_index = 1
 light_mask = 3
 visibility_layer = 3
+z_index = 1
 position = Vector2(131, 69)
 
 [node name="Camera2D" type="Camera2D" parent="Player" unique_id=2003611831]
@@ -51,5 +63,29 @@ script = ExtResource("1_cam")
 [node name="Cat" parent="Runner" unique_id=1834370449 instance=ExtResource("9_pw37s")]
 position = Vector2(-62, 14)
 
-[node name="Elite" parent="." unique_id=1480324047 instance=ExtResource("8_pw37s")]
-position = Vector2(255, 139)
+[node name="Enemy" type="Node2D" parent="." unique_id=1847284187]
+
+[node name="Elite" parent="Enemy" unique_id=1480324047 instance=ExtResource("8_pw37s")]
+position = Vector2(109, -468)
+
+[node name="Bouncer" type="Node2D" parent="Enemy" unique_id=474713861]
+
+[node name="Enemy5" parent="Enemy/Bouncer" unique_id=1171050525 instance=ExtResource("13_fc420")]
+position = Vector2(472, -183)
+
+[node name="Enemy4" parent="Enemy/Bouncer" unique_id=1908727956 instance=ExtResource("13_fc420")]
+position = Vector2(394, -278)
+
+[node name="Enemy6" parent="Enemy/Bouncer" unique_id=217035067 instance=ExtResource("13_fc420")]
+position = Vector2(550, -267)
+
+[node name="Roamer" type="Node2D" parent="Enemy" unique_id=1970641041]
+
+[node name="Enemy_3" parent="Enemy/Roamer" unique_id=632087891 instance=ExtResource("14_kc0sw")]
+position = Vector2(-281, -217)
+
+[node name="Enemy_4" parent="Enemy/Roamer" unique_id=1266215598 instance=ExtResource("14_kc0sw")]
+position = Vector2(-200, -188)
+
+[node name="Enemy_5" parent="Enemy/Roamer" unique_id=449214052 instance=ExtResource("14_kc0sw")]
+position = Vector2(-248, -262)

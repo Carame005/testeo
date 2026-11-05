@@ -161,10 +161,9 @@ size = Vector2(48, 16)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_s7cmp"]
 size = Vector2(16, 47)
 
-[node name="HabitacionChica" type="Node2D" unique_id=873851779 node_paths=PackedStringArray("doors")]
+[node name="HabitacionTrampa" type="Node2D" unique_id=873851779 node_paths=PackedStringArray("doors")]
 script = ExtResource("1_qdxtd")
 doors = [NodePath("Door"), NodePath("Door2"), NodePath("Door3"), NodePath("Door4")]
-door_close_delay = 0.15
 enter_teleport_inset = 44.0
 
 [node name="Switchable" type="Node2D" parent="." unique_id=1028693094]

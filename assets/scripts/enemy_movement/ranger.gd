@@ -134,4 +134,4 @@ func _fire(direction: Vector2) -> void:
 	_enemy.get_parent().add_child(bolt)
 	bolt.global_position = _enemy.global_position
 	if bolt.has_method("launch"):
-		bolt.launch(direction, projectile_speed)
+		bolt.launch(direction, projectile_speed, _enemy)

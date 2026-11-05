@@ -2,6 +2,8 @@ extends Area2D
 
 @export var speed: float = 120.0
 @export var lifetime: float = 2.0
+@export var damage: int = 1
+@export var knockback_force: float = 90.0
 
 const MASK_WORLD := 1 << 0
 const MASK_PLAYER := 1 << 1
@@ -20,7 +22,7 @@ func _ready() -> void:
 	set_physics_process(false)
 
 
-func launch(dir: Vector2, launch_speed: float = -1.0) -> void:
+func launch(dir: Vector2, launch_speed: float = -1.0, _owner_enemy: Node = null) -> void:
 	direction = dir.normalized() if dir != Vector2.ZERO else Vector2.RIGHT
 	if launch_speed > 0.0:
 		speed = launch_speed
@@ -68,7 +70,15 @@ func _on_body_entered(body: Node2D) -> void:
 
 func _handle_hit(body: Object) -> void:
 	if body is Node and (body as Node).is_in_group("player"):
-		# Player damage is intentionally deferred.
+		var player := body as Node2D
+		var dmg := player.get_node_or_null("Damageable")
+		if dmg != null and dmg.has_method("take_damage"):
+			dmg.take_damage(damage)
+		if player.has_method("apply_knockback") and knockback_force > 0.0:
+			var away := direction
+			if away == Vector2.ZERO:
+				away = Vector2.DOWN
+			player.apply_knockback(away.normalized(), knockback_force)
 		queue_free()
 		return
 	# Walls, doors, and any other solid body.
