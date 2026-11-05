@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://bridb0jxppo7a" path="res://assets/scripts/camera_room_limiter.gd" id="1_cam"]
 [ext_resource type="PackedScene" uid="uid://d00igym7pwfe1" path="res://assets/scenes/player.tscn" id="1_cb66b"]
 [ext_resource type="Script" uid="uid://cu44dr7fdx6kc" path="res://assets/scripts/game.gd" id="1_game"]
-[ext_resource type="PackedScene" uid="uid://dbrbdavepsa2p" path="res://assets/scenes/habitacion.tscn" id="2_habitacion"]
+[ext_resource type="PackedScene" uid="uid://dbrbdavepsa2p" path="res://assets/scenes/habitacion_start.tscn" id="2_habitacion"]
 [ext_resource type="PackedScene" uid="uid://bd24eu5qqqv2d" path="res://assets/scenes/habitacion_enemy_test.tscn" id="2_s2rys"]
 [ext_resource type="PackedScene" uid="uid://dlskv0gn2mn8a" path="res://assets/scenes/habitacion_variada.tscn" id="2_wfsp4"]
 [ext_resource type="Script" uid="uid://125g5aj0fh7k" path="res://assets/scripts/room.gd" id="3_wfsp4"]
@@ -34,12 +34,11 @@ position = Vector2(121, -239)
 position = Vector2(634, 65)
 
 [node name="HabitacionVariada" parent="Habitaciones" unique_id=140121719 instance=ExtResource("2_wfsp4")]
-position = Vector2(120, 355)
+position = Vector2(-246, -484)
 script = ExtResource("3_wfsp4")
 
 [node name="HabitacionMain" parent="Habitaciones" unique_id=499444695 instance=ExtResource("2_habitacion")]
 position = Vector2(153, 95)
-script = ExtResource("3_wfsp4")
 
 [node name="Habitaciontest2" parent="Habitaciones" unique_id=1510706846 instance=ExtResource("2_s2rys")]
 position = Vector2(485, -240)
