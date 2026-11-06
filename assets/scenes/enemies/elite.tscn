@@ -601,6 +601,9 @@ size = Vector2(14, 22)
 
 [node name="Elite" type="CharacterBody2D" unique_id=1480324047]
 script = ExtResource("1_enemy")
+max_health = 8
+move_speed = 32.0
+attack_cooldown = 1.2
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1967101641]
 sprite_frames = SubResource("SpriteFrames_ohwbt")

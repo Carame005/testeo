@@ -5,7 +5,7 @@
 [ext_resource type="Texture2D" uid="uid://bjfoqq1h5v8xd" path="res://assets/sprites/enemy/enemy3/Sleep-Anim.png" id="3_gituc"]
 [ext_resource type="Texture2D" uid="uid://cf8rhmumnmohc" path="res://assets/sprites/enemy/enemy3/Walk-Anim.png" id="4_5w6ft"]
 [ext_resource type="Script" uid="uid://bgh2aslom8hdu" path="res://assets/scripts/damageable.gd" id="5_hhqxl"]
-[ext_resource type="Script" uid="uid://dy2j0dnedteod" path="res://assets/scripts/enemy_movement/roamer.gd" id="6_otr5t"]
+[ext_resource type="Script" uid="uid://dy2j0dnedteod" path="res://assets/scripts/enemy_movement/roamer/roamer.gd" id="6_otr5t"]
 [ext_resource type="Script" uid="uid://bkoec71xnejuk" path="res://assets/scripts/switchable.gd" id="7_2cfc3"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_c7n7d"]
@@ -170,6 +170,9 @@ radius = 6.0827627
 
 [node name="Enemy_3" type="CharacterBody2D" unique_id=632087891]
 script = ExtResource("1_85lem")
+max_health = 3
+move_speed = 35.0
+attack_cooldown = 0.0
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1549397864]
 sprite_frames = SubResource("SpriteFrames_bhbtl")

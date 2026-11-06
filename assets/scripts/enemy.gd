@@ -1,9 +1,17 @@
 class_name Enemy
 extends CharacterBody2D
 
+@export_group("Stats")
+@export var max_health: int = 3
+@export var move_speed: float = 55.0
+## Seconds between attacks. 0 = this enemy does not use an attack cooldown.
+@export var attack_cooldown: float = 0.0
+
+@export_group("Contact")
 @export var contact_damage: int = 1
 @export var contact_cooldown: float = 0.65
 @export var contact_knockback: float = 100.0
+@export var hurt_anim_time: float = 0.35
 
 @onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var damageable: Node2D = $Damageable
@@ -14,6 +22,8 @@ var _active: bool = true
 var _attacking: bool = false
 var _contact_cd: float = 0.0
 var _hurtboxes: Array[Area2D] = []
+var _hurt_lock: float = 0.0
+var _hurt_facing: Vector2 = Vector2.DOWN
 
 
 func _ready() -> void:
@@ -25,15 +35,50 @@ func _ready() -> void:
 	_movement = _find_movement()
 	if _movement and _movement.has_method("setup"):
 		_movement.setup(self)
+	_apply_stats()
 	if damageable.has_signal("died"):
 		damageable.died.connect(_on_died)
+	if damageable.has_signal("damaged"):
+		damageable.damaged.connect(_on_damaged)
 	if switchable.has_signal("mode_changed"):
 		switchable.mode_changed.connect(_on_mode_changed)
 		_on_mode_changed(switchable.get_mode())
 
 
+func _apply_stats() -> void:
+	if damageable != null:
+		damageable.max_health = maxi(max_health, 1)
+		damageable.health = damageable.max_health
+
+	var elite_brain := get_node_or_null("Elite")
+	if elite_brain != null and "max_health" in elite_brain:
+		elite_brain.max_health = damageable.max_health if damageable != null else max_health
+
+	if move_speed > 0.0:
+		if _movement != null and "speed" in _movement:
+			_movement.speed = move_speed
+		var aggressive := get_node_or_null("States/Aggresive")
+		if aggressive != null and "move_speed" in aggressive:
+			aggressive.move_speed = move_speed
+
+	if attack_cooldown > 0.0:
+		if _movement != null:
+			if "attack_cooldown" in _movement:
+				_movement.attack_cooldown = attack_cooldown
+			if "fire_cooldown" in _movement:
+				_movement.fire_cooldown = attack_cooldown
+		var circular := get_node_or_null("States/Aggresive/Circular")
+		if circular != null and "cooldown" in circular:
+			circular.cooldown = attack_cooldown
+
+
 func _physics_process(delta: float) -> void:
 	_contact_cd = maxf(_contact_cd - delta, 0.0)
+	if _hurt_lock > 0.0:
+		_hurt_lock = maxf(_hurt_lock - delta, 0.0)
+		velocity = Vector2.ZERO
+		move_and_slide()
+		return
 	if not _active or _movement == null:
 		velocity = Vector2.ZERO
 		move_and_slide()
@@ -54,6 +99,8 @@ func set_attacking(value: bool) -> void:
 
 
 func play_directional_animation(prefix: String, direction: Vector2) -> void:
+	if _hurt_lock > 0.0:
+		return
 	if direction == Vector2.ZERO:
 		if not _attacking:
 			animated_sprite.play("idle")
@@ -102,9 +149,59 @@ func try_receive_hit(amount: int, hit_origin: Vector2) -> bool:
 	if _movement != null and _movement.has_method("try_receive_hit"):
 		return bool(_movement.call("try_receive_hit", amount, hit_origin))
 	if damageable != null and damageable.has_method("take_damage"):
+		var toward := hit_origin - global_position
+		if toward != Vector2.ZERO:
+			_hurt_facing = _cardinal_from(toward)
 		damageable.take_damage(amount)
 		return true
 	return false
+
+
+func _on_damaged(_amount: int, _current_health: int) -> void:
+	# Elite already owns its hurt feedback.
+	if get_node_or_null("Elite") != null:
+		return
+	var divisible := get_node_or_null("Dividisible")
+	if divisible != null and divisible.has_method("is_splitting") and bool(divisible.call("is_splitting")):
+		return
+	_trigger_hurt_anim()
+
+
+func clear_hurt_lock() -> void:
+	_hurt_lock = 0.0
+
+
+func _trigger_hurt_anim() -> void:
+	if animated_sprite == null or animated_sprite.sprite_frames == null:
+		return
+	if not animated_sprite.sprite_frames.has_animation("hurt_down"):
+		return
+	_hurt_lock = hurt_anim_time
+	play_hurt_animation(_hurt_facing)
+
+
+func play_hurt_animation(direction: Vector2) -> void:
+	var dir := direction if direction != Vector2.ZERO else Vector2.DOWN
+	var anim_name := "hurt_down"
+	if absf(dir.x) > absf(dir.y):
+		anim_name = "hurt_sides"
+		animated_sprite.flip_h = dir.x < 0.0
+	elif dir.y < 0.0:
+		anim_name = "hurt_up"
+		animated_sprite.flip_h = false
+	else:
+		animated_sprite.flip_h = false
+
+	var frames := animated_sprite.sprite_frames
+	if frames != null and frames.has_animation(anim_name):
+		frames.set_animation_loop(anim_name, false)
+		animated_sprite.play(anim_name)
+
+
+func _cardinal_from(dir: Vector2) -> Vector2:
+	if absf(dir.x) >= absf(dir.y):
+		return Vector2.RIGHT if dir.x > 0.0 else Vector2.LEFT
+	return Vector2.DOWN if dir.y > 0.0 else Vector2.UP
 
 
 func _uses_generic_contact() -> bool:

@@ -15,6 +15,11 @@ signal player_exited(player: Node2D)
 ## Grace time after enter before sealing doors (player is already teleported inside).
 @export var door_close_delay: float = 0.15
 
+@export_group("Enemy Spawns")
+## One entry per EnemySpawnPoint (tree order). Editable on room instances in the Inspector.
+## Leave an element empty to keep that marker's default enemy.
+@export var spawn_enemy_scenes: Array[PackedScene] = []
+
 var _active: bool = false
 var _spawned_enemies: Array[Node] = []
 var _door_close_token: int = 0
@@ -187,6 +192,7 @@ func get_spawn_points() -> Array[EnemySpawnPoint]:
 func spawn_enemies() -> Array[Node]:
 	var container := _get_or_create_enemies_container()
 	_prune_spawned_enemies()
+	_apply_spawn_type_overrides()
 	for point in get_spawn_points():
 		var enemy := point.spawn(container)
 		if enemy != null and not _spawned_enemies.has(enemy):
@@ -197,6 +203,17 @@ func spawn_enemies() -> Array[Node]:
 	return _spawned_enemies.duplicate()
 
 
+func _apply_spawn_type_overrides() -> void:
+	if spawn_enemy_scenes.is_empty():
+		return
+	var points := get_spawn_points()
+	for i in mini(points.size(), spawn_enemy_scenes.size()):
+		var packed: PackedScene = spawn_enemy_scenes[i]
+		if packed == null:
+			continue
+		points[i].set_enemy_scene_override(packed)
+
+
 func get_alive_enemies() -> Array[Node]:
 	_prune_spawned_enemies()
 	return _spawned_enemies.duplicate()
@@ -204,6 +221,17 @@ func get_alive_enemies() -> Array[Node]:
 
 func has_alive_enemies() -> bool:
 	return not get_alive_enemies().is_empty()
+
+
+## Used by splitters (e.g. Divider) so child segments stay tracked for room clear.
+func register_enemy(enemy: Node) -> void:
+	if enemy == null or not is_instance_valid(enemy):
+		return
+	if _spawned_enemies.has(enemy):
+		return
+	_spawned_enemies.append(enemy)
+	if enemy.has_signal("tree_exiting"):
+		enemy.tree_exiting.connect(_on_spawned_enemy_exiting.bind(enemy), CONNECT_ONE_SHOT)
 
 
 func set_all_doors_open(open: bool) -> void:

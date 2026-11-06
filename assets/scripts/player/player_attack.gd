@@ -146,7 +146,7 @@ func _activate_melee(
 
 func _spawn_projectile(facing: Vector2) -> void:
 	var bolt := Area2D.new()
-	bolt.set_script(load("res://assets/scripts/player_projectile.gd"))
+	bolt.set_script(load("res://assets/scripts/player/player_projectile.gd"))
 	var sprite := Sprite2D.new()
 	sprite.texture = projectile_texture
 	bolt.add_child(sprite)

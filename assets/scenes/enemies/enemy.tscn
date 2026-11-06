@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://c1fbuoperocxx" path="res://assets/scripts/enemy.gd" id="1_kbpvo"]
 [ext_resource type="Script" uid="uid://bgh2aslom8hdu" path="res://assets/scripts/damageable.gd" id="2_55kjn"]
-[ext_resource type="Script" uid="uid://ctisdxhye00na" path="res://assets/scripts/enemy_movement/hunter.gd" id="2_hunter"]
+[ext_resource type="Script" uid="uid://ctisdxhye00na" path="res://assets/scripts/enemy_movement/hunter/hunter.gd" id="2_hunter"]
 [ext_resource type="Script" uid="uid://bkoec71xnejuk" path="res://assets/scripts/switchable.gd" id="2_switch"]
 [ext_resource type="Texture2D" uid="uid://wkauqmpqqh0h" path="res://assets/sprites/enemy/enemy1/Attack-Anim.png" id="2_t2q6g"]
 [ext_resource type="Texture2D" uid="uid://dp51uog7b3w1i" path="res://assets/sprites/enemy/enemy1/Idle-Anim.png" id="3_o3hxu"]
@@ -442,6 +442,9 @@ radius = 7.0
 
 [node name="Enemy" type="CharacterBody2D" unique_id=1191328024]
 script = ExtResource("1_kbpvo")
+max_health = 3
+move_speed = 55.0
+attack_cooldown = 0.8
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=818412766]
 sprite_frames = SubResource("SpriteFrames_l4rmu")

@@ -5,7 +5,7 @@
 [ext_resource type="Script" uid="uid://bgh2aslom8hdu" path="res://assets/scripts/damageable.gd" id="2_j5asl"]
 [ext_resource type="Texture2D" uid="uid://jgnj67pwkkwl" path="res://assets/sprites/enemy/enemy4/Sleep-Anim.png" id="3_gqm0i"]
 [ext_resource type="Script" uid="uid://bkoec71xnejuk" path="res://assets/scripts/switchable.gd" id="3_h74ec"]
-[ext_resource type="Script" uid="uid://hyer0s0jqcmx" path="res://assets/scripts/enemy_movement/bouncer.gd" id="4_gqm0i"]
+[ext_resource type="Script" uid="uid://hyer0s0jqcmx" path="res://assets/scripts/enemy_movement/bouncer/bouncer.gd" id="4_gqm0i"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_akui1"]
 atlas = ExtResource("2_h74ec")
@@ -97,6 +97,9 @@ radius = 7.0
 
 [node name="Enemy4" type="CharacterBody2D" unique_id=1171050525]
 script = ExtResource("1_kpjfe")
+max_health = 3
+move_speed = 60.0
+attack_cooldown = 0.0
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1304020782]
 sprite_frames = SubResource("SpriteFrames_akui1")

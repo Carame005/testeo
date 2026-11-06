@@ -10,14 +10,15 @@ var _active: bool = true
 
 func setup(enemy: CharacterBody2D) -> void:
 	_enemy = enemy
-	# Not on the "enemy" layer the player solid-collides with, so no push.
-	# Still collides with world/doors; Hurtbox detects the player separately.
-	_enemy.collision_layer = 0
+	# Stay on the enemy layer so player melee/projectiles can hit this body.
+	# Skip solid push vs the player (hurtbox still handles contact damage).
+	_enemy.collision_layer = 1 << 2
 	_enemy.collision_mask = (1 << 0) | (1 << 3)
 	_direction = initial_direction.normalized()
 	if _direction == Vector2.ZERO:
 		_direction = Vector2.RIGHT
 	_play_float()
+	call_deferred("_ignore_player_collision")
 
 
 func set_active(active: bool) -> void:
@@ -37,6 +38,15 @@ func physics_update(_delta: float) -> void:
 
 	_enemy.velocity = _direction * speed
 	_play_float()
+
+
+func _ignore_player_collision() -> void:
+	if _enemy == null or not is_instance_valid(_enemy):
+		return
+	var player := _enemy.get_tree().get_first_node_in_group("player") as PhysicsBody2D
+	if player == null:
+		return
+	_enemy.add_collision_exception_with(player)
 
 
 func _play_float() -> void:

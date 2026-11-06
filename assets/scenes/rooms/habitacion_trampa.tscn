@@ -5,7 +5,6 @@
 [ext_resource type="Texture2D" uid="uid://clsh17dljxm24" path="res://assets/scenary/TilesetField.png" id="3_e04oj"]
 [ext_resource type="Script" uid="uid://ctoj8a51fem1a" path="res://assets/scripts/door.gd" id="4_wenam"]
 [ext_resource type="Script" uid="uid://cgr461snah57y" path="res://assets/scripts/rooms/enemy_spawn_point.gd" id="5_v2356"]
-[ext_resource type="PackedScene" uid="uid://cbt3w2furilt1" path="res://assets/scenes/enemy.tscn" id="6_n34pu"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_0b2by"]
 texture = ExtResource("3_e04oj")
@@ -251,14 +250,11 @@ disabled = true
 [node name="EnemySpawnpoint" type="Marker2D" parent="." unique_id=1869950011]
 position = Vector2(-97, -37)
 script = ExtResource("5_v2356")
-enemy_scene = ExtResource("6_n34pu")
 
 [node name="EnemySpawnpoint2" type="Marker2D" parent="." unique_id=136418372]
 position = Vector2(95, -33)
 script = ExtResource("5_v2356")
-enemy_scene = ExtResource("6_n34pu")
 
 [node name="EnemySpawnpoint3" type="Marker2D" parent="." unique_id=898948369]
 position = Vector2(0, 64)
 script = ExtResource("5_v2356")
-enemy_scene = ExtResource("6_n34pu")
