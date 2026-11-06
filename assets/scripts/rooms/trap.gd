@@ -31,6 +31,7 @@ func on_player_exited(_player: Node2D) -> void:
 	# Never soft-lock the player outside a sealed uncleared trap.
 	if not _cleared:
 		set_all_doors_open(true)
+	commit_unlock_buttons()
 
 
 func _process(_delta: float) -> void:
@@ -57,6 +58,10 @@ func _check_cleared() -> void:
 		return
 	if not has_alive_enemies():
 		_clear_trap()
+
+
+func on_button_unlock() -> void:
+	_clear_trap()
 
 
 func _clear_trap() -> void:

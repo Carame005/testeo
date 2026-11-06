@@ -20,9 +20,20 @@ signal player_exited(player: Node2D)
 ## Leave an element empty to keep that marker's default enemy.
 @export var spawn_enemy_scenes: Array[PackedScene] = []
 
+@export_group("Button Unlock")
+## When enabled, assigned buttons can open this room's doors / clear its lock.
+@export var unlock_doors_with_buttons: bool = false
+## Drag PropButton nodes here (scene: res://assets/scenes/props/interactive/button.tscn).
+@export var unlock_buttons: Array[Area2D] = []
+## If true, every assigned button must be pressed. If false, any one is enough.
+@export var require_all_buttons: bool = true
+
 var _active: bool = false
 var _spawned_enemies: Array[Node] = []
 var _door_close_token: int = 0
+var _button_unlock_done: bool = false
+var _button_unlock_committed: bool = false
+var _buttons_wired: bool = false
 
 
 func _ready() -> void:
@@ -32,6 +43,7 @@ func _ready() -> void:
 	# (default DISABLE_MODE_REMOVE would let the player walk out of the map).
 	_keep_world_collision_when_disabled()
 	process_mode = Node.PROCESS_MODE_DISABLED
+	call_deferred("_setup_button_unlock")
 
 
 func is_active() -> bool:
@@ -237,6 +249,77 @@ func register_enemy(enemy: Node) -> void:
 func set_all_doors_open(open: bool) -> void:
 	for door in get_doors():
 		door.set_open(open)
+
+
+func _setup_button_unlock() -> void:
+	if _buttons_wired or not unlock_doors_with_buttons:
+		return
+	_buttons_wired = true
+	for button in unlock_buttons:
+		if button == null:
+			continue
+		if button.has_signal("pressed") and not button.pressed.is_connected(_on_unlock_button_changed):
+			button.pressed.connect(_on_unlock_button_changed)
+		if button.has_signal("released") and not button.released.is_connected(_on_unlock_button_changed):
+			button.released.connect(_on_unlock_button_changed)
+
+
+func _on_unlock_button_changed() -> void:
+	if _button_unlock_done or _button_unlock_committed or not unlock_doors_with_buttons:
+		return
+	if not _are_unlock_buttons_satisfied():
+		return
+	_button_unlock_done = true
+	# Button press arrives during physics flush — open doors next frame.
+	call_deferred("on_button_unlock")
+
+
+func _are_unlock_buttons_satisfied() -> bool:
+	if unlock_buttons.is_empty():
+		return false
+	if require_all_buttons:
+		for button in unlock_buttons:
+			if button == null:
+				return false
+			if button.has_method("is_pressed"):
+				if not bool(button.call("is_pressed")):
+					return false
+			else:
+				return false
+		return true
+	for button in unlock_buttons:
+		if button != null and button.has_method("is_pressed") and bool(button.call("is_pressed")):
+			return true
+	return false
+
+
+## Call when leaving the room successfully so pressed buttons stay down forever.
+func commit_unlock_buttons() -> void:
+	if not unlock_doors_with_buttons:
+		return
+	if not _button_unlock_done and not _are_unlock_buttons_satisfied():
+		return
+	_button_unlock_done = true
+	_button_unlock_committed = true
+	for button in unlock_buttons:
+		if button != null and button.has_method("commit"):
+			button.call("commit")
+
+
+## Call on void respawn / failed attempt — undoes uncommitted button progress.
+func reset_unlock_buttons() -> void:
+	if not unlock_doors_with_buttons or _button_unlock_committed:
+		return
+	_button_unlock_done = false
+	for button in unlock_buttons:
+		if button != null and button.has_method("reset"):
+			button.call("reset")
+
+
+## Override in room types that clear locks / open a specific exit door.
+func on_button_unlock() -> void:
+	cancel_pending_door_close()
+	set_all_doors_open(true)
 
 
 ## Closes doors after `door_close_delay`. Cancelled if the player leaves first.

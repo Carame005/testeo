@@ -29,13 +29,12 @@ func set_open(open: bool) -> void:
 	for child in get_children():
 		if child is CollisionShape2D:
 			# Shapes stay enabled; open/closed is handled by layers.
-			child.disabled = false
+			# Defer in case this is called from a physics body_entered callback.
+			child.set_deferred("disabled", false)
 
-	if _open:
-		# Only enemies collide — player can pass.
-		collision_layer = LAYER_DOOR_ENEMY
-	else:
-		collision_layer = LAYER_DOOR_ENEMY | LAYER_DOOR_PLAYER
+	# Only enemies collide when open — player can pass.
+	var layer := LAYER_DOOR_ENEMY if _open else (LAYER_DOOR_ENEMY | LAYER_DOOR_PLAYER)
+	set_deferred("collision_layer", layer)
 
 
 func is_open() -> bool:
